@@ -40,7 +40,7 @@
             bool one = y != stringSize - 1 && IsPossible(B, x, y + 1, alreadyPass);
             bool two = y != stringSize - 1 && IsPossible(B, x, y - 1, alreadyPass);
             bool three = x != B.Length - 1 && IsPossible(B, x + 1, y, alreadyPass);
-            bool four = y != stringSize - 1 && IsPossible(B, x - 1, y, alreadyPass);
+            bool four = x != B.Length - 1 && IsPossible(B, x - 1, y, alreadyPass);
             return one || two || three || four;
         }
     }
