@@ -22,26 +22,29 @@
     internal static bool IsPossible(string[] B, int x, int y, List<Tuple<int, int>> alreadyPass)
     {
         int stringSize = B.First().Length;
-        if (x == -1 || y == -1)
+        if (x == -1 || y == -1 || x >= B.Length || y >= B.First().Length || 
+                alreadyPass.Contains(new Tuple<int, int>(x, y)) || HaveGuardsLooking(B, x, y) || B[x][y] == 'X')
             return false;
-        else if (HaveGuardsLooking(B, x, y))
-            return false;
-        if (x == B.Length - 1 && y == stringSize - 1)
+        else if (x == B.Length - 1 && y == stringSize - 1)
         {
             return true;
         }
-        if (x < 0 || y < 0 || x >= B.Length || y >= B.First().Length)
-            return false;
-        else if (B[x][y] == 'X' || alreadyPass.Contains(new Tuple<int, int>(x, y)))
-            return false;
         else
         {
             alreadyPass.Add(new Tuple<int, int>(x, y));
             bool one = y != stringSize - 1 && IsPossible(B, x, y + 1, alreadyPass);
+            if (one)
+                return true;
             bool two = y != stringSize - 1 && IsPossible(B, x, y - 1, alreadyPass);
+            if (two)
+                return true;
             bool three = x != B.Length - 1 && IsPossible(B, x + 1, y, alreadyPass);
+            if (three)
+                return true;
             bool four = x != B.Length - 1 && IsPossible(B, x - 1, y, alreadyPass);
-            return one || two || three || four;
+            if (four)
+                return true;
+            return false;
         }
     }
 
