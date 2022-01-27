@@ -2,51 +2,40 @@
 {
     public static void Main()
     {
-        string[] A = new string[4] { "X.....", "..v..X", ".>..X..", "A......" };
-        string[] B = new string[3] { "...Xv", "AX..^", ".XX.." };
-        string[] C = new string[2] { "...", ">.A" };
-        string[] D = new string[2] { "A.v", "..." };
-
-        Console.WriteLine(!Solution(A) ? "Correto" : "Errado");
-        Console.WriteLine(Solution(B) ? "Correto" : "Errado");
-        Console.WriteLine(!Solution(C) ? "Correto" : "Errado");
-        Console.WriteLine(!Solution(D) ? "Correto" : "Errado");
+        Console.WriteLine(!Solution(new string[4] { "X.....", "..v..X", ".>..X..", "A......" }) ? "Correto" : "Errado");
+        Console.WriteLine(Solution(new string[3] { "...Xv", "AX..^", ".XX.." }) ? "Correto" : "Errado");
+        Console.WriteLine(!Solution(new string[2] { "...", ">.A" }) ? "Correto" : "Errado");
+        Console.WriteLine(!Solution(new string[2] { "A.v", "..." }) ? "Correto" : "Errado");
     }
+
     internal static bool Solution(string[] B)
     {
         int x = -1, y = -1;
         FindAssassin(B, ref x, ref y);
-        return IsPossible(B, x, y, new List<Tuple<int, int>>());
+        List<Tuple<int, int>> buffer = new();
+        return IsPossible(B, x, y, ref buffer);
     }
 
-    internal static bool IsPossible(string[] B, int x, int y, List<Tuple<int, int>> alreadyPass)
+    internal static bool IsPossible(string[] B, int x, int y, ref List<Tuple<int, int>> alreadyPass)
     {
-        int stringSize = B.First().Length;
-        if (x == -1 || y == -1 || x >= B.Length || y >= B.First().Length || 
-                alreadyPass.Contains(new Tuple<int, int>(x, y)) || HaveGuardsLooking(B, x, y) || B[x][y] == 'X')
+        if (IsNotAuthorized(ref x, ref y, ref B, ref alreadyPass))
             return false;
-        else if (x == B.Length - 1 && y == stringSize - 1)
-        {
+        else if (IsBottomRight(ref x, ref y, ref B))
             return true;
-        }
         else
         {
             alreadyPass.Add(new Tuple<int, int>(x, y));
-            bool one = y != stringSize - 1 && IsPossible(B, x, y + 1, alreadyPass);
-            if (one)
-                return true;
-            bool two = y != stringSize - 1 && IsPossible(B, x, y - 1, alreadyPass);
-            if (two)
-                return true;
-            bool three = x != B.Length - 1 && IsPossible(B, x + 1, y, alreadyPass);
-            if (three)
-                return true;
-            bool four = x != B.Length - 1 && IsPossible(B, x - 1, y, alreadyPass);
-            if (four)
+            if (IsPossible(B, x, y + 1, ref alreadyPass) || IsPossible(B, x, y - 1, ref alreadyPass)
+                || IsPossible(B, x + 1, y, ref alreadyPass) || IsPossible(B, x - 1, y, ref alreadyPass))
                 return true;
             return false;
         }
     }
+
+    internal static bool IsBottomRight(ref int x, ref int y, ref string[] B) => x == B.Length - 1 && y == B.First().Length - 1;
+
+    internal static bool IsNotAuthorized(ref int x, ref int y, ref string[] B, ref List<Tuple<int, int>> alreadyPass) => x == -1 || y == -1 || x >= B.Length
+                    || y >= B.First().Length || alreadyPass.Contains(new Tuple<int, int>(x, y)) || HaveGuardsLooking(B, x, y) || B[x][y] == 'X';
 
     internal static bool HaveGuardsLooking(string[] B, int x, int y)
     {
