@@ -25,10 +25,8 @@
         else
         {
             alreadyPass.Add(new Tuple<int, int>(x, y));
-            if (IsPossible(B, x, y + 1, ref alreadyPass) || IsPossible(B, x, y - 1, ref alreadyPass)
-                || IsPossible(B, x + 1, y, ref alreadyPass) || IsPossible(B, x - 1, y, ref alreadyPass))
-                return true;
-            return false;
+            return IsPossible(B, x, y + 1, ref alreadyPass) || IsPossible(B, x, y - 1, ref alreadyPass) 
+                || IsPossible(B, x + 1, y, ref alreadyPass) || IsPossible(B, x - 1, y, ref alreadyPass);
         }
     }
 
