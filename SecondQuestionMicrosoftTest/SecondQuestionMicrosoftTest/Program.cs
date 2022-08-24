@@ -12,7 +12,7 @@
     {
         int x = -1, y = -1;
         FindAssassin(B, ref x, ref y);
-        List<Tuple<int, int>> buffer = new();
+        var buffer = new List<Tuple<int, int>>();
         return IsPossible(B, x, y, ref buffer);
     }
 
@@ -25,7 +25,7 @@
         else
         {
             alreadyPass.Add(new Tuple<int, int>(x, y));
-            return IsPossible(B, x, y + 1, ref alreadyPass) || IsPossible(B, x, y - 1, ref alreadyPass) 
+            return IsPossible(B, x, y + 1, ref alreadyPass) || IsPossible(B, x, y - 1, ref alreadyPass)
                 || IsPossible(B, x + 1, y, ref alreadyPass) || IsPossible(B, x - 1, y, ref alreadyPass);
         }
     }
